@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Foundation\Auth\User;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller
+class AuthController extends Controller 
 {
-     public function showLogin()
+   public function showLogin()
     {
         return view('auth.login');
     }
@@ -24,7 +23,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+
+            // ✅ Redirect based on role
+            if (Auth::user()->hasAnyRole(['Admin','SuperAdmin'])) {
+                return redirect()->route('admin.dashboard');
+            }
+
+            return redirect()->route('home');
         }
 
         return back()->withErrors([
@@ -51,12 +56,12 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        // Assign default role
-       $user->assignRole('Customer');
+        // ✅ Assign default role
+        $user->assignRole('Customer');
 
         Auth::login($user);
 
-        return redirect('dashboard');
+        return redirect()->route('home');
     }
 
     public function logout(Request $request)
@@ -64,6 +69,9 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+
+        return redirect()->route('home');
+
+
     }
 }

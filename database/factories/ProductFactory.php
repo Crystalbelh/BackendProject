@@ -18,26 +18,31 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-       return [
-            'name' => $this->faker->words(2, true),
-            'sku' => strtoupper($this->faker->unique()->bothify('PROD-###??')),
-            'description' => $this->faker->paragraph(),
-            'price' => $this->faker->randomFloat(2, 10, 500),
-            'stock' => $this->faker->numberBetween(0, 100),
-            // ✅ Fake product image URL
-            'image'       => $this->faker->imageUrl(640, 480, 'product', true, 'ecommerce'),
-            // 'category_id' => Category::factory(),
-            // 'user_id' => User::factory(), // owned by Admin or SuperAdmin
+        return [
+            'name'        => $this->faker->words(3, true),
+            'sku'         => strtoupper($this->faker->unique()->bothify('PROD-###??')),
+            'description' => $this->faker->sentence(15),
+            'price'       => $this->faker->randomFloat(2, 10, 500),
+            'stock'       => $this->faker->numberBetween(1, 50),
+
+            // ✅ Use consistent fake images (instead of random two ways)
+            'image'       => 'https://picsum.photos/300?random=' . $this->faker->unique()->numberBetween(1, 100),
+
+            // ✅ Attach category + admin automatically
+            'category_id' => Category::inRandomOrder()->first()->id ?? null,
+            'user_id'     => User::whereHas('roles', function ($q) {
+                                $q->whereIn('name', ['SuperAdmin', 'Admin']);
+                            })->inRandomOrder()->first()->id ?? 1,
         ];
 
        
 
-        return [
-        'name' => $this->faker->words(3, true),
-        'description' => $this->faker->sentence(15),
-        'price' => $this->faker->randomFloat(2, 10, 500),
-        'stock' => $this->faker->numberBetween(1,50),
-        'image' => 'https://picsum.photos/300?random=' . $this->faker->unique()->numberBetween(1, 100), // fake images
-    ];
+    //     return [
+    //     'name' => $this->faker->words(3, true),
+    //     'description' => $this->faker->sentence(15),
+    //     'price' => $this->faker->randomFloat(2, 10, 500),
+    //     'stock' => $this->faker->numberBetween(1,50),
+    //     'image' => 'https://picsum.photos/300?random=' . $this->faker->unique()->numberBetween(1, 100), // fake images
+    // ];
     }
 }

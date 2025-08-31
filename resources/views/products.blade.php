@@ -1,6 +1,6 @@
-@extends('layouts.app')
+<x-layouts.app>
 
-@section('content')
+@slot('content')
 <div class="min-h-screen bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-10">
   <h1 class="text-3xl font-bold mb-4">🛒 Products</h1>
   <p>Here you’ll be able to manage and browse products.</p>
@@ -8,4 +8,4 @@
     ⬅ Back to Dashboard
   </a>
 </div>
-@endsection
+</x-layouts.app>

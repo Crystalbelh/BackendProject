@@ -32,11 +32,15 @@ class ProductSeeder extends Seeder
             return;
         }
 
-        // Create 30 products, each linked to admin/super and a random category
-        Product::factory(30)->create([
-    'user_id' => $adminOrSuper->id,
-    'category_id' => $categories->random()->id,
-]);
+        // Generate 30 products using the factory
+        Product::factory(30)->create();
+
+//         // Create 30 products, each linked to admin/super and a random category
+//         Product::factory(30)->create([
+//     'user_id' => $adminOrSuper->id,
+//     'category_id' => $categories->random()->id,
+// ]);
+
 
     }
 }

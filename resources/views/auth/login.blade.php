@@ -1,10 +1,9 @@
 {{-- If your happiness depends on money, you will never be happy with yourself. --}}
-{{-- If your happiness depends on money, you will never be happy with yourself. --}}
 <x-layouts.app>
     <div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg">
         <h2 class="text-2xl font-bold text-center mb-6 text-indigo-700">🔑 Login</h2>
 
-        <form method="POST" action="{{ route('login') }}" class="space-y-4">
+    <form method="POST" action="{{ route('login') }}" class="space-y-4">
             @csrf
 
             <!-- Email -->

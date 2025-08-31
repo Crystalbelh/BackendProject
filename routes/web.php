@@ -1,14 +1,14 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Livewire\Admin\Dashboard;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Home;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
-
 
 
 
@@ -30,58 +30,63 @@ Route::post('/logout', function () {
 })->name('logout');
 
 Route::get('/', function () {
-    return view('home');
+    return view('livewire.home');
 })->name('home');
 
 Route::get('/', Home::class)->name('home');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Route::middleware(['auth'])->group(function () {
-    // Dashboard for all logged-in users
- 
-// });
-
-//    Route::get('/dashboard', function () {
-//         return view('dashboard');
-//     })->name('dashboard');
-
-
-// Route::get('/dashboard', function () {
-//     $user = Auth::user();
-//     return view('dashboard', compact('user'));
-// })->name('dashboard');
-
-// ✅ One dashboard route for everyone (fixes error)
-Route::middleware(['auth'])->get('/dashboard/user', function () {
+// Dashboard (Admin/SuperAdmin only)
+Route::get('/dashboard', function () {
     $user = Auth::user();
-    return view('dashboard', compact('user'));
-})->name('dashboard-auth');
+    return view('dashboard_views.dashboard', compact('user'));
+})->middleware(['auth', 'role:Admin|SuperAdmin'])->name('dashboard');
 
 Route::get('/products', function () {
-        return view('products');
-    })->name('products');
+    return view('products');
+})->name('products');
 
-    // Dashboard route
-// Route::get('/dashboard', function () {
-//     return view('dashboard'); // looks for resources/views/dashboard.blade.php
-// })->name('dashboard')->middleware('auth'); 
+// Route::get('/ad', function () {
+//     return view('livewire.admin.dashboard');
+// })->name('admindashboard');
 
-    Route::get('/about', function () {
-        return view('about');
-    })->name('about');
+Route::get('/about', function () {
+    return view('dashboard_views.about');
+})->name('about');
 
-    Route::get('/settings', function () {
-        return view('settings');
-    })->name('settings');
+Route::get('/settings', function () {
+    // dd('sidf');
+    return view('dashboard_views.settings');
+})->name('settings');
 
-    Route::get('/home', function () {
-        return view('home');
-    })->name('home');
+   
+// Admin routes (only Admin & SuperAdmin)
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        // Route::get('/dashboard', DashboardController::class)->name('dashboard');
+        Route::get('/dashboard', Dashboard::class)->name('dashboard');
+        // Route::post('/dashboard', Dashboard::class)->name('dashboard');
+    });
+
+
+     
+// Customer routes (only customers)
+Route::middleware(['auth'])
+    ->group(function () {
+
+    Route::view('user/dashboard', 'dashboard_views.dashboard')->name('user.dashboard');
+
+    });
+
+
 
     Route::middleware(['role:Customer'])->group(function () {
     Route::get('/shop', fn() => 'Customer Dashboard');
@@ -100,67 +105,34 @@ Route::middleware(['role:Customer'])->get('/dashboard', fn() => 'Customer Dashbo
 
 
 
-// Dashboard (only for authenticated users)
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware('auth')->name('dashboard');
 
+ // Route::get('/home', function () {
+    //     return view('home');
+    // })->name('home');
 
+  // Admin routes group
+// Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+//     Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    
+//     // // Additional admin routes can be added here
+//     // Route::get('/orders', function () {
+//     //     return view('admin.orders');
+//     // })->name('orders');
+    
+//     // Route::get('/products', function () {
+//     //     return view('admin.products');
+//     // })->name('products');
+    
+//     // Route::get('/users', function () {
+//     //     return view('admin.users');
+//     // })->name('users');
+    
+//     // You can also add resource routes
+//     // Route::resource('products', AdminProductController::class);
+// });
 
-// // Customer dashboard
-// Route::middleware(['auth', ''])->group(function () {
+// Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 //     Route::get('/dashboard', function () {
-//         return view('dashboard');
-//     });
-// });
-
-// // Admin/SuperAdmin dashboard
-// Route::middleware(['auth', ''])->group(function () {
-//     Route::get('/admin', function () {
 //         return view('admin.dashboard');
-//     });
+//     })->name('dashboard');
 // });
-
-
-
-
-// Public storefront (already in your project)
-// Route::get('/', [ProductController::class, 'index'])->name('home');
-// Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
-
-// Auth pages (guests only)
-// Route::middleware('guest')->group(function () {
-//     Route::get('/login', Login::class)->name('login');
-//     Route::get('/register', Register::class)->name('register');
-// });
-
-// Logout (POST) for signed-in users
-// Route::post('/logout', function (Request $request) {
-//     Auth::logout();
-//     $request->session()->invalidate();
-//     $request->session()->regenerateToken();
-//     return redirect()->route('home');
-// })->middleware('auth')->name('logout');
-
-// Cart & Checkout access control (example)
-// Route::post('/cart/add/{product}', [\App\Http\Controllers\OrderController::class, 'addToCart'])
-//     ->name('cart.add'); // guest allowed (CartService will use session)
-
-// Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])
-//     ->middleware('auth') // must login to checkout
-//     ->name('checkout');
-
-// Admin area
-// Route::prefix('admin')->middleware(['auth', 'role:Admin|SuperAdmin'])->group(function () {
-//     // Product/category/order management routes live here
-//     // Route::resource('products', ProductController::class);
-//     // Route::resource('categories', CategoryController::class);
-//     // Route::post('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
-// });
-
-// SuperAdmin-only sensitive actions
-// Route::prefix('admin')->middleware(['auth', 'role:SuperAdmin'])->group(function () {
-    // Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-    // Route::post('orders/{order}/refund', [OrderController::class, 'refund'])->name('orders.refund');
-// });
-
