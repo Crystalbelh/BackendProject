@@ -25,6 +25,10 @@ class CategorySeeder extends Seeder
         foreach ($categories as $category) {
            $newCategory = Category::firstOrCreate(['name' => $category], ['name' => $category]);
             // dump($newCategory->name);
+
+            // foreach ($categories as $name) {
+            // Category::create(['name' => $name]);
         }
+        // }
     }
 }

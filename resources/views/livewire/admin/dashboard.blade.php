@@ -1,7 +1,7 @@
  {{-- Because she competes with no one, no one can compete with her. --}}
 <div class="min-h-screen bg-gray-100 font-sans">
     <div class="flex h-screen">
-        {{-- @livewire('admin.dashboard') --}}
+        @livewire('admin.dashboard')
         <!-- Sidebar -->
         <div class="w-64 bg-gradient-to-b from-purple-800 to-purple-900 text-white">
             <div class="p-5 border-b border-purple-700">
@@ -10,44 +10,57 @@
                 </h1>
             </div>
             
-            <nav class="mt-6">
-                <div class="px-4 mb-4 text-purple-200 text-xs uppercase tracking-wider">Main</div>
-                
-                <a href="#" class="flex items-center px-6 py-3 text-white bg-purple-700 border-r-4 border-purple-300">
-                    <i class="fas fa-home mr-3 text-purple-300"></i> Dashboard
-                </a>
-                
-                <a href="#" class="flex items-center px-6 py-3 mt-1 text-purple-200 hover:bg-purple-700 hover:text-white">
-                    <i class="fas fa-shopping-cart mr-3 text-blue-300"></i> Orders
-                    <span class="bg-purple-500 text-xs font-semibold px-2 py-0.5 rounded-full ml-auto">12</span>
-                </a>
-                
-                <a href="#" class="flex items-center px-6 py-3 mt-1 text-purple-200 hover:bg-purple-700 hover:text-white">
-                    <i class="fas fa-box mr-3 text-green-300"></i> Products
-                </a>
-                
-                <a href="#" class="flex items-center px-6 py-3 mt-1 text-purple-200 hover:bg-purple-700 hover:text-white">
-                    <i class="fas fa-users mr-3 text-cyan-300"></i> Customers
-                </a>
-                
-                <a href="#" class="flex items-center px-6 py-3 mt-1 text-purple-200 hover:bg-purple-700 hover:text-white">
-                    <i class="fas fa-chart-bar mr-3 text-yellow-300"></i> Analytics
-                </a>
-                
-                <div class="px-4 mt-8 mb-4 text-purple-200 text-xs uppercase tracking-wider">Management</div>
-                
-                <a href="#" class="flex items-center px-6 py-3 mt-1 text-purple-200 hover:bg-purple-700 hover:text-white">
-                    <i class="fas fa-tags mr-3 text-pink-300"></i> Categories
-                </a>
-                
-                <a href="#" class="flex items-center px-6 py-3 mt-1 text-purple-200 hover:bg-purple-700 hover:text-white">
-                    <i class="fas fa-percentage mr-3 text-red-300"></i> Discounts
-                </a>
-                
-                <a href="#" class="flex items-center px-6 py-3 mt-1 text-purple-200 hover:bg-purple-700 hover:text-white">
-                    <i class="fas fa-cog mr-3 text-gray-300"></i> Settings
-                </a>
-            </nav>
+          <!-- Admin Sidebar -->
+<aside class="w-64 bg-purple-800 text-white min-h-screen">
+    <div class="flex items-center px-6 py-4 border-b border-purple-700">
+        <i class="fas fa-store text-2xl text-pink-400 mr-3"></i>
+        <span class="text-lg font-bold">Admin Panel</span>
+    </div>
+
+    <nav class="mt-4 space-y-1">
+        <!-- Dashboard -->
+        <a href="{{ route('admin.dashboard') }}"
+           class="flex items-center px-6 py-3 
+           {{ request()->routeIs('admin.dashboard') ? 'bg-purple-700 text-white' : 'text-purple-200 hover:bg-purple-700 hover:text-white' }}">
+            <i class="fas fa-tachometer-alt mr-3 text-blue-300"></i> Dashboard
+        </a>
+
+        <!-- Products -->
+        <a href="{{ route('admin.products') }}"
+           class="flex items-center px-6 py-3 
+           {{ request()->routeIs('admin.products') ? 'bg-purple-700 text-white' : 'text-purple-200 hover:bg-purple-700 hover:text-white' }}">
+            <i class="fas fa-box mr-3 text-green-300"></i> Products
+        </a>
+
+        <!-- Orders -->
+        <a href="{{ route('admin.products') }}"
+           class="flex items-center px-6 py-3 
+           {{ request()->routeIs('admin.orders') ? 'bg-purple-700 text-white' : 'text-purple-200 hover:bg-purple-700 hover:text-white' }}">
+            <i class="fas fa-shopping-cart mr-3 text-yellow-300"></i> Orders
+        </a>
+
+        <!-- Customers -->
+        <a href="{{ route('admin.products') }}"
+   class="flex items-center px-6 py-3 mt-1 text-purple-200 hover:bg-purple-700 hover:text-white">
+    <i class="fas fa-box mr-3 text-green-300"></i> Products
+</a>
+
+        <!-- Reports -->
+        <a href="{{ route('admin.products') }}"
+           class="flex items-center px-6 py-3 
+           {{ request()->routeIs('admin.reports') ? 'bg-purple-700 text-white' : 'text-purple-200 hover:bg-purple-700 hover:text-white' }}">
+            <i class="fas fa-chart-line mr-3 text-orange-300"></i> Reports
+        </a>
+
+        <!-- Settings -->
+        <a href="{{ route('admin.products') }}"
+           class="flex items-center px-6 py-3 
+           {{ request()->routeIs('admin.settings') ? 'bg-purple-700 text-white' : 'text-purple-200 hover:bg-purple-700 hover:text-white' }}">
+            <i class="fas fa-cog mr-3 text-gray-300"></i> Settings
+        </a>
+    </nav>
+</aside>
+
             
             <div class="absolute bottom-0 w-64 p-4 bg-purple-900">
                 <div class="flex items-center">
@@ -55,9 +68,11 @@
                         <span class="text-white font-bold">A</span>
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-white">Admin User</p>
-                        <p class="text-xs text-purple-200">admin@eshop.com</p>
-                    </div>
+    @auth
+        <p class="text-sm font-medium text-white">{{ auth()->user()->name }}</p>
+        <p class="text-xs text-purple-200">{{ auth()->user()->email }}</p>
+    @endauth
+</div>
                 </div>
                 <a href="#" class="flex items-center mt-4 text-purple-200 hover:text-white">
                     <i class="fas fa-sign-out-alt mr-2"></i> Logout
@@ -267,7 +282,7 @@
                                 </div>
                                 <div class="text-right">
                                     <p class="font-medium">${{ number_format($product['price'], 2) }}</p>
-                                    <p class="text-sm text-gray-500">{{ $product['sold_count'] }} sold</p>
+                                    <p class="text-sm text-gray-500">{{ $product['sold_count'] }} sold out</p>
                                 </div>
                             </div>
                             @endforeach

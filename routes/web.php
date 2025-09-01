@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\Products;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Home;
@@ -12,14 +13,9 @@ use Illuminate\Support\Facades\Route;
 
 
 
-
-
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
-
-
 
 // Route::get('/register', Register::class)->name('register');
 // Route::get('/login', Login::class)->name('login');
@@ -53,7 +49,8 @@ Route::get('/products', function () {
 })->name('products');
 
 // Route::get('/ad', function () {
-//     return view('livewire.admin.dashboard');
+//     return view('livewire.admin.dashboard');storage/logs/laravel.log
+
 // })->name('admindashboard');
 
 Route::get('/about', function () {
@@ -71,10 +68,18 @@ Route::middleware(['auth', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        // Route::get('/dashboard', DashboardController::class)->name('dashboard');
         Route::get('/dashboard', Dashboard::class)->name('dashboard');
-        // Route::post('/dashboard', Dashboard::class)->name('dashboard');
+        Route::get('/products', Products::class)->name('products');
     });
+
+    // Route::middleware(['auth', 'admin'])
+    // ->prefix('admin')
+    // ->name('admin.')
+    // ->group(function () {
+    //     Route::get('/products', Products::class)->name('products');
+    // });
+
+
 
 
      
@@ -101,7 +106,6 @@ Route::middleware(['role:SuperAdmin'])->group(function () {
 });
 
 Route::middleware(['role:Customer'])->get('/dashboard', fn() => 'Customer Dashboard');
-
 
 
 
