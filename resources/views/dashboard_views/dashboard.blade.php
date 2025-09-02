@@ -66,16 +66,16 @@
       <h1 class="text-2xl font-bold text-indigo-600">MyShop</h1>
     </div>
     <nav class="flex-1 p-4 space-y-2">
-      <a href="#" class="flex items-center px-4 py-2 rounded-lg hover:bg-indigo-100 text-gray-700 font-medium">
+      <a href="{{ route('home') }}" class="flex items-center px-4 py-2 rounded-lg hover:bg-indigo-100 text-gray-700 font-medium">
         🏠 Home
       </a>
-      <a href="#" class="flex items-center px-4 py-2 rounded-lg hover:bg-indigo-100 text-gray-700 font-medium">
+      <a href="{{ route('product') }}" class="flex items-center px-4 py-2 rounded-lg hover:bg-indigo-100 text-gray-700 font-medium">
         🛍 Products
       </a>
-      <a href="#" class="flex items-center px-4 py-2 rounded-lg hover:bg-indigo-100 text-gray-700 font-medium">
+      <a href="{{ route('about') }}" class="flex items-center px-4 py-2 rounded-lg hover:bg-indigo-100 text-gray-700 font-medium">
         ℹ️ About
       </a>
-      <a href="#" class="flex items-center px-4 py-2 rounded-lg hover:bg-indigo-100 text-gray-700 font-medium">
+      <a href="{{ route('settings') }}" class="flex items-center px-4 py-2 rounded-lg hover:bg-indigo-100 text-gray-700 font-medium">
         ⚙️ Settings
       </a>
     </nav>

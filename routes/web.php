@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Livewire\Admin\Orders;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Products;
 use App\Livewire\Auth\Login;
@@ -10,6 +11,8 @@ use App\Livewire\Home;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Admin\Roles;
+
 
 
 
@@ -44,9 +47,44 @@ Route::get('/dashboard', function () {
     return view('dashboard_views.dashboard', compact('user'));
 })->middleware(['auth', 'role:Admin|SuperAdmin'])->name('dashboard');
 
+// For customers (must be logged in)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/products', [ProductController::class, 'index'])->name('products');
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/wishlist/add/{id}', [WishlistController::class, 'add'])->name('wishlist.add');
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+});
+
+Route::middleware(['auth', 'role:Admin|SuperAdmin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/dashboard', Dashboard::class)->name('dashboard');
+        Route::get('/products', Products::class)->name('products');
+        Route::get('/orders', Orders::class)->name('orders');
+        // Route::get('/users', Users::class)->name('users');
+        // Route::get('/payments', Payments::class)->name('payments');
+        // Route::get('/reviews', Reviews::class)->name('reviews');
+        // Route::get('/discounts', Discounts::class)->name('discounts');
+        // Route::get('/reports', Reports::class)->name('reports');
+        // Route::get('/settings', Settings::class)->name('settings');
+        
+        // SuperAdmin only
+        Route::middleware(['role:SuperAdmin'])->group(function () {
+            // Route::get('/roles', Roles::class)->name('roles');
+        });
+    });
+
+
+
+
 Route::get('/products', function () {
     return view('products');
 })->name('products');
+
+Route::get('/orders', function () {
+    return view('orders');
+})->name('orders');
 
 // Route::get('/ad', function () {
 //     return view('livewire.admin.dashboard');storage/logs/laravel.log
@@ -57,10 +95,17 @@ Route::get('/about', function () {
     return view('dashboard_views.about');
 })->name('about');
 
+Route::get('/products', function () {
+    return view('dashboard_views.products');
+})->name('products');
+
 Route::get('/settings', function () {
     // dd('sidf');
     return view('dashboard_views.settings');
 })->name('settings');
+
+
+
 
    
 // Admin routes (only Admin & SuperAdmin)
@@ -70,6 +115,8 @@ Route::middleware(['auth', 'admin'])
     ->group(function () {
         Route::get('/dashboard', Dashboard::class)->name('dashboard');
         Route::get('/products', Products::class)->name('products');
+        Route::get('/orders', Orders::class)->name('orders');
+        // Route::get('/products', Products::class)->name('products');
     });
 
     // Route::middleware(['auth', 'admin'])

@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Admin;
 
-use Livewire\Component;
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 
 class Dashboard extends Component
 {
@@ -77,7 +78,7 @@ class Dashboard extends Component
     {
         // This is a simplified example - you'd need order items relationship
         $products = Product::inRandomOrder()
-            ->take(3)
+            ->take(10)
             ->get();
 
         $this->topProducts = $products->map(function ($product) {
@@ -121,8 +122,16 @@ class Dashboard extends Component
         ];
     }
 
-    public function render()
+     public function render()
     {
-        return view('livewire.admin.dashboard');
+        $productsCount   = Product::count();
+        $categoriesCount = Category::count();
+        $usersCount      = User::count();
+
+        return view('livewire.admin.dashboard', [
+            'productsCount'   => $productsCount,
+            'categoriesCount' => $categoriesCount,
+            'usersCount'      => $usersCount,
+        ]);
     }
 }

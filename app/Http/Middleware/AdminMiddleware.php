@@ -33,10 +33,14 @@ class AdminMiddleware
 {
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('SuperAdmin'))) {
+        if (Auth::check() && (Auth::user()->hasAnyRole(['Admin', 'SuperAdmin']))) {
             return $next($request);
+        }else{
+            return abort(403, 'Unauthorized personnel');
         }
 
         return redirect()->route('home')->with('error', 'Access denied.');
     }
+
+    
 }
